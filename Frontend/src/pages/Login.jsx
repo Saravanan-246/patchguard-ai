@@ -3,6 +3,42 @@ import { loginUser, registerUser } from "../services/authService";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Shield, Mail, User, Lock } from "lucide-react";
 
+/* ================= INPUT COMPONENT (Moved Outside) ================= */
+function InputField({
+  name,
+  type = "text",
+  placeholder,
+  icon: Icon,
+  value,
+  onChange,
+  showPassword,
+  togglePassword,
+}) {
+  return (
+    <div style={styles.inputWrap}>
+      <Icon size={18} style={styles.inputIcon} />
+      <input
+        name={name}
+        type={type === "password" && showPassword ? "text" : type}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        required
+        style={styles.input}
+      />
+      {name === "password" && (
+        <button
+          type="button"
+          onClick={togglePassword}
+          style={styles.eyeButton}
+        >
+          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+        </button>
+      )}
+    </div>
+  );
+}
+
 export default function Login() {
   const navigate = useNavigate();
 
@@ -12,34 +48,27 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  /* ================= INPUT HANDLER ================= */
   const handleChange = (e) => {
     setError("");
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  /* ================= VALIDATION ================= */
   const validateForm = () => {
     if (!form.email || !form.password) {
       return "Email and password are required.";
     }
-
     if (!isLogin && !form.name.trim()) {
       return "Full name is required.";
     }
-
     if (!/\S+@\S+\.\S+/.test(form.email)) {
       return "Please enter a valid email address.";
     }
-
     if (form.password.length < 6) {
       return "Password must be at least 6 characters.";
     }
-
     return null;
   };
 
-  /* ================= SUBMIT ================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
@@ -52,8 +81,6 @@ export default function Login() {
 
     try {
       setLoading(true);
-      setError("");
-
       const response = isLogin
         ? await loginUser({ email: form.email, password: form.password })
         : await registerUser(form);
@@ -69,36 +96,10 @@ export default function Login() {
           err.message ||
           "Authentication failed."
       );
-      setForm((prev) => ({ ...prev, password: "" }));
     } finally {
       setLoading(false);
     }
   };
-
-  /* ================= INPUT COMPONENT ================= */
-  const InputField = ({ name, type = "text", placeholder, icon: Icon }) => (
-    <div style={styles.inputWrap}>
-      <Icon size={18} style={styles.inputIcon} />
-      <input
-        name={name}
-        type={type === "password" && showPassword ? "text" : type}
-        placeholder={placeholder}
-        value={form[name]}
-        onChange={handleChange}
-        required
-        style={styles.input}
-      />
-      {name === "password" && (
-        <button
-          type="button"
-          onClick={() => setShowPassword((prev) => !prev)}
-          style={styles.eyeButton}
-        >
-          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-        </button>
-      )}
-    </div>
-  );
 
   return (
     <div style={styles.container}>
@@ -114,25 +115,38 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} style={styles.form}>
           {!isLogin && (
-            <InputField name="name" placeholder="Full Name" icon={User} />
+            <InputField
+              name="name"
+              placeholder="Full Name"
+              icon={User}
+              value={form.name}
+              onChange={handleChange}
+            />
           )}
 
-          <InputField name="email" placeholder="Email Address" icon={Mail} />
+          <InputField
+            name="email"
+            placeholder="Email Address"
+            icon={Mail}
+            value={form.email}
+            onChange={handleChange}
+          />
+
           <InputField
             name="password"
             type="password"
             placeholder="Password"
             icon={Lock}
+            value={form.password}
+            onChange={handleChange}
+            showPassword={showPassword}
+            togglePassword={() => setShowPassword((prev) => !prev)}
           />
 
           {error && <div style={styles.error}>{error}</div>}
 
           <button type="submit" disabled={loading} style={styles.button}>
-            {loading
-              ? "Please wait..."
-              : isLogin
-              ? "Sign In"
-              : "Create Account"}
+            {loading ? "Please wait..." : isLogin ? "Sign In" : "Create Account"}
           </button>
         </form>
 
@@ -206,7 +220,7 @@ const styles = {
     top: "50%",
     transform: "translateY(-50%)",
     color: "#94a3b8",
-    pointerEvents: "none", // 🔥 FIXED HERE
+    pointerEvents: "none",
   },
   input: {
     width: "100%",
