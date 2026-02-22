@@ -32,22 +32,57 @@ const app = express();
 const server = http.createServer(app);
 
 /* ================================
-   Security & Middleware
+   Security Middleware
 ================================ */
 app.use(helmet());
+
+// Required for Render / reverse proxy environments
+app.set("trust proxy", 1);
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
-    credentials: true,
-  })
-);
+/* ================================
+   CORS (Local + Production Safe)
+================================ */
 
-app.use(express.json());
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "https://patchguard-ai.vercel.app",
+];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow server tools (Postman, curl)
+    if (!origin) return callback(null, true);
+
+    // Allow exact matches
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    // Allow Vercel preview deployments
+    if (origin.endsWith(".vercel.app")) {
+      return callback(null, true);
+    }
+
+    return callback(new Error(`CORS blocked for origin: ${origin}`));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
+
+/* ================================
+   Body Parsers
+================================ */
+app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 /* ================================
@@ -87,19 +122,16 @@ app.use((req, res) => {
 app.use(errorHandler);
 
 /* ================================
-   Start Server (Async Bootstrap)
+   Start Server
 ================================ */
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
   try {
-    // Connect DB first
     await connectDB();
 
-    // Initialize socket
     const io = initSocket(server);
 
-    // Create ONE attack engine instance
     const attackEngine = new AdvancedAttackEngine(
       io,
       System,
@@ -107,7 +139,7 @@ const startServer = async () => {
       Attack
     );
 
-    // Simulate Attack Route (after engine ready)
+    // Attack Simulation Route
     app.post("/api/simulate-attack/:systemId", async (req, res) => {
       try {
         await attackEngine.runAttack(req.params.systemId);
@@ -133,7 +165,7 @@ const startServer = async () => {
 🌍 Environment: ${process.env.NODE_ENV || "development"}
 ========================================
 `);
-      });
+    });
   } catch (error) {
     console.error("❌ Server startup failed:", error);
     process.exit(1);
