@@ -1,0 +1,158 @@
+/* ===============================
+   MAIN CONTAINER
+================================ */
+
+.ai-container {
+  min-height: 100vh;
+  background: radial-gradient(circle at top right, #0f172a, #020617 85%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  font-family: "Inter", sans-serif;
+}
+
+/* ===============================
+   CARD
+================================ */
+
+.ai-card {
+  width: 700px;
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(14px);
+  border-radius: 20px;
+  padding: 35px;
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.6),
+    0 0 40px rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+}
+
+/* ===============================
+   TITLE
+================================ */
+
+.ai-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #60a5fa;
+  margin-bottom: 25px;
+}
+
+/* ===============================
+   INPUT
+================================ */
+
+.ai-input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: white;
+  font-size: 14px;
+  margin-bottom: 25px;
+  transition: 0.3s ease;
+}
+
+.ai-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.5);
+}
+
+/* ===============================
+   STATUS BOX
+================================ */
+
+.ai-status-box {
+  background: #0a0f1f;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 25px;
+  border: 1px solid #1e293b;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.ai-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ai-stat span {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.ai-stat strong {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* ===============================
+   RISK COLORS
+================================ */
+
+.high {
+  color: #ef4444;
+  text-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+}
+
+.medium {
+  color: #f59e0b;
+}
+
+.low {
+  color: #22c55e;
+}
+
+/* ===============================
+   BUTTON
+================================ */
+
+.ai-button {
+  width: 100%;
+  padding: 16px;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.35);
+}
+
+.ai-button:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px rgba(37, 99, 235, 0.45);
+}
+
+.ai-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ===============================
+   AI PROCESSING ANIMATION
+================================ */
+
+.ai-button.processing {
+  animation: pulseBlue 1.5s infinite;
+}
+
+@keyframes pulseBlue {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}

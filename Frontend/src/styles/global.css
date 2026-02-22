@@ -1,0 +1,141 @@
+/* =========================
+   GLOBAL RESET
+========================= */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* =========================
+   ROOT LAYOUT FIX
+========================= */
+
+html,
+body {
+  height: 100%;
+}
+
+#root {
+  min-height: 100vh;   /* IMPORTANT FIX */
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================
+   BODY
+========================= */
+
+body {
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f1f5f9;   /* ONLY background owner */
+  color: #0f172a;
+  line-height: 1.6;
+  font-size: 14px;
+  letter-spacing: 0.2px;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  overflow-x: hidden;
+}
+
+/* =========================
+   TYPOGRAPHY SYSTEM
+========================= */
+
+h1 { font-size: 28px; font-weight: 700; }
+h2 { font-size: 22px; font-weight: 600; }
+h3 { font-size: 18px; font-weight: 600; }
+h4 { font-size: 16px; font-weight: 600; }
+h5 { font-size: 14px; font-weight: 600; }
+h6 { font-size: 13px; font-weight: 600; }
+
+p {
+  font-size: 14px;
+  color: #475569;
+}
+
+/* =========================
+   BUTTON RESET
+========================= */
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: all 0.2s ease;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =========================
+   FORM RESET
+========================= */
+
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  border: none;
+  background: transparent;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #94a3b8;
+}
+
+/* =========================
+   LINKS
+========================= */
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s ease;
+}
+
+/* =========================
+   CARD BASE (Reusable)
+========================= */
+
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.05);
+  border: 1px solid #f1f5f9;
+}
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}

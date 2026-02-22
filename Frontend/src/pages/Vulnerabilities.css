@@ -1,0 +1,261 @@
+/* ===============================
+   PAGE
+================================ */
+
+.vuln-page {
+  padding: 48px;
+  background: #f8fafc;
+  min-height: 100vh;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #0f172a;
+}
+
+/* ===============================
+   HEADER
+================================ */
+
+.vuln-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.vuln-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.vuln-header p {
+  font-size: 14px;
+  color: #64748b;
+  margin-top: 6px;
+}
+
+/* ===============================
+   FILTERS
+================================ */
+
+.vuln-filters {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 8px 12px;
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  font-size: 14px;
+  background: transparent;
+}
+
+.vuln-filters select {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* ===============================
+   TABLE WRAPPER
+================================ */
+
+.vuln-table-wrapper {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+  padding: 24px;
+  overflow-x: auto;
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.05);
+}
+
+/* ===============================
+   TABLE
+================================ */
+
+.vuln-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.vuln-table th {
+  text-align: left;
+  padding: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #64748b;
+  border-bottom: 1px solid #e2e8f0;
+  letter-spacing: 0.5px;
+}
+
+.vuln-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.vuln-table tr:hover {
+  background: #f9fafb;
+}
+
+.cve-id {
+  font-weight: 600;
+  color: #2563eb;
+}
+
+/* ===============================
+   SEVERITY BADGES
+================================ */
+
+.severity-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.severity-badge.critical {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.severity-badge.high {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.severity-badge.medium {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.severity-badge.low {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+/* ===============================
+   STATUS BADGES
+================================ */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.status-badge.open {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.status-badge.in-progress {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.status-badge.resolved {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+/* ===============================
+   ACTION BUTTONS
+================================ */
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  background: #f1f5f9;
+}
+
+.action-btn.primary {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+}
+
+.action-btn.primary:hover {
+  background: #1d4ed8;
+}
+
+.action-btn.success {
+  background: #16a34a;
+  color: #ffffff;
+  border: none;
+}
+
+.action-btn.success:hover {
+  background: #15803d;
+}
+
+/* ===============================
+   EMPTY STATE
+================================ */
+
+.empty-state {
+  text-align: center;
+  padding: 40px 0;
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 768px) {
+  .vuln-page {
+    padding: 24px;
+  }
+
+  .vuln-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .vuln-filters {
+    width: 100%;
+  }
+
+  .vuln-table-wrapper {
+    padding: 16px;
+  }
+}
