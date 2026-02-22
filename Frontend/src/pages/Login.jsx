@@ -11,22 +11,56 @@ export default function Login() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
+  const [isDesktop, setIsDesktop] = useState(false);
 
-  /* ================= RESPONSIVE FIX ================= */
+  /* ================= SAFE RESPONSIVE INIT ================= */
   useEffect(() => {
-    const handleResize = () => {
+    const checkScreen = () => {
       setIsDesktop(window.innerWidth >= 1024);
     };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+
+    checkScreen();
+    window.addEventListener("resize", checkScreen);
+    return () => window.removeEventListener("resize", checkScreen);
   }, []);
 
-  const handleChange = (e) =>
+  /* ================= INPUT HANDLER ================= */
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
+  /* ================= FORM VALIDATION ================= */
+  const validateForm = () => {
+    if (!form.email || !form.password) {
+      return "Email and password are required.";
+    }
+
+    if (!isLogin && !form.name) {
+      return "Full name is required.";
+    }
+
+    if (!/\S+@\S+\.\S+/.test(form.email)) {
+      return "Please enter a valid email address.";
+    }
+
+    if (form.password.length < 6) {
+      return "Password must be at least 6 characters.";
+    }
+
+    return null;
+  };
+
+  /* ================= SUBMIT ================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
+
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     setLoading(true);
     setError("");
 
@@ -36,14 +70,25 @@ export default function Login() {
         : await registerUser(form);
 
       localStorage.setItem("token", response.data.token);
+
+      // Clear sensitive data
+      setForm({ name: "", email: "", password: "" });
+
       navigate("/dashboard");
     } catch (err) {
-      setError(err.response?.data?.message || "Authentication failed");
+      setError(
+        err?.response?.data?.message ||
+        "Unable to authenticate. Please try again."
+      );
+
+      // Clear password field on error (security best practice)
+      setForm((prev) => ({ ...prev, password: "" }));
     } finally {
       setLoading(false);
     }
   };
 
+  /* ================= INPUT FIELD COMPONENT ================= */
   const InputField = ({ name, type = "text", placeholder, icon: Icon }) => (
     <div style={styles.inputWrap}>
       <Icon size={20} style={styles.inputIcon} />
@@ -54,10 +99,14 @@ export default function Login() {
         value={form[name]}
         onChange={handleChange}
         required
+        autoComplete={name}
         style={styles.input}
       />
       {name === "password" && (
-        <div style={styles.eye} onClick={() => setShowPassword(!showPassword)}>
+        <div
+          style={styles.eye}
+          onClick={() => setShowPassword(!showPassword)}
+        >
           {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
         </div>
       )}
@@ -71,7 +120,6 @@ export default function Login() {
         flexDirection: isDesktop ? "row" : "column",
       }}
     >
-      {/* LEFT PANEL */}
       {isDesktop && (
         <div style={styles.left}>
           <div style={styles.brandBox}>
@@ -86,7 +134,6 @@ export default function Login() {
         </div>
       )}
 
-      {/* RIGHT PANEL */}
       <div style={styles.right}>
         <div style={styles.card}>
           <h2 style={styles.title}>
