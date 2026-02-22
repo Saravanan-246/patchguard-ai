@@ -1,11 +1,14 @@
 import axios from "axios";
 
 /* ========================================
-   Base Configuration
+   Base Configuration (ENV ONLY)
 ======================================== */
 
-const BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+if (!BASE_URL) {
+  throw new Error("VITE_API_BASE_URL is not defined");
+}
 
 const API = axios.create({
   baseURL: BASE_URL,
@@ -15,7 +18,6 @@ const API = axios.create({
 
 /* ========================================
    Request Interceptor
-   Attach JWT Automatically
 ======================================== */
 
 API.interceptors.request.use(
@@ -23,7 +25,7 @@ API.interceptors.request.use(
     const token = localStorage.getItem("token");
 
     if (token) {
-      // Do NOT overwrite headers object
+      config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${token}`;
     }
 
@@ -34,14 +36,12 @@ API.interceptors.request.use(
 
 /* ========================================
    Response Interceptor
-   Global Error Handling
 ======================================== */
 
 API.interceptors.response.use(
   (response) => response,
   (error) => {
     if (!error.response) {
-      console.error("Network Error:", error.message);
       return Promise.reject({
         status: 0,
         message: "Network error. Please check your connection.",
@@ -50,23 +50,11 @@ API.interceptors.response.use(
 
     const { status, data } = error.response;
 
-    /* ================= 401 Unauthorized ================= */
-
     if (status === 401) {
-      console.warn("Session expired. Logging out...");
-
       localStorage.removeItem("token");
-
-      // Prevent redirect loop
       if (!window.location.pathname.includes("/login")) {
-        window.location.href = "/login";
+        window.location.replace("/login");
       }
-    }
-
-    /* ================= 5xx Server Error ================= */
-
-    if (status >= 500) {
-      console.error("Server Error:", data);
     }
 
     return Promise.reject({
